@@ -1,10 +1,15 @@
 from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from config import get_mongo_db_client as db_instance
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
+from src.service_layer.message_bus import ping_pong, get_date_time
+import asyncio
+import uuid
 
 app = FastAPI()
+
 collections = db_instance()["test-goxave"]
 
 class ProductDetails(BaseModel):
@@ -66,6 +71,18 @@ async def save_url(product: Product):
             }
         ]
     }
+    
+async def ping_pong_generator():
+    my_id = f"{uuid.uuid4()}"
+    yield f"[{my_id}] ping {get_date_time()}\t"
+    result = ping_pong.apply_async(task_id=my_id)
+    i = 0
+    while i < 20:
+        if result.ready():
+            yield result.get()
+            break
+        await asyncio.sleep(0.5)
+        i += 1
 
 @app.get("/products")
 def get_my_products():
@@ -77,3 +94,11 @@ def get_my_products():
     
 
     return [product for product in my_saved_products]
+
+@app.get("/api/hello")
+def hello():
+    return "Hello"
+
+@app.get("/api/ping")
+async def get_ping_pong():
+    return StreamingResponse(ping_pong_generator(), media_type="text/event-stream")
