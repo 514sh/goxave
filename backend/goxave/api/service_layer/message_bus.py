@@ -1,0 +1,59 @@
+from goxave.api.adapters.scrapers import abc, jbl_store
+from goxave.api.domain import commands, events
+from goxave.api.service_layer import command_handlers, event_handlers
+
+
+def handle_scrapers(
+    url: str,
+) -> abc.AbstractScraper | None:
+    if isinstance(url, str):
+        url = url.strip()
+
+    if url.startswith("https://jblstore.com.ph/"):
+        return jbl_store.JBLStoreScraper(url=url)
+
+
+EVENT_HANDLERS = {
+    events.NotifyNewItemAdded: [event_handlers.notify_discord_new_item_added],
+    events.NotifyErrorAddingNewItem: [
+        event_handlers.notify_discord_on_error_adding_new_item
+    ],
+}
+
+COMMAND_HANDLERS = {
+    commands.AddNewLogin: command_handlers.handle_login,
+    commands.AddNewItem: command_handlers.handle_add_new_item,
+    commands.GetMyProducts: command_handlers.handle_get_users_item,
+    commands.RemovedOneSavedProduct: command_handlers.handle_removed_one_saved_product,
+    commands.GetOneSavedProduct: command_handlers.get_one_saved_product,
+    commands.UpdateUserInfo: command_handlers.update_user_info,
+    commands.FetchUserInfo: command_handlers.fetch_user_info,
+}
+
+
+def handle(message, uow):
+    queue = [message]
+    results = []
+    while queue:
+        current_message = queue.pop(0)
+        if isinstance(current_message, events.Event):
+            print("hanle_events is calleed.")
+            handle_events(current_message, uow, queue)
+        elif isinstance(current_message, commands.Command):
+            results.append(handle_commands(current_message, uow, queue))
+    return results
+
+
+def handle_events(event, uow, queue):
+    for handler in EVENT_HANDLERS[type(event)]:
+        handler(event, uow)
+        for new_event in uow.collect_events():
+            queue.append(new_event)
+
+
+def handle_commands(command, uow, queue):
+    handler = COMMAND_HANDLERS[type(command)]
+    result = handler(command, uow)
+    for new_event in uow.collect_events():
+        queue.append(new_event)
+    return result

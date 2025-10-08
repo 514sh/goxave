@@ -8,10 +8,24 @@ dependencies = [
     "beautifulsoup4>=4.13.4",
     "celery[redis]>=5.5.3",
     "fastapi[standard]>=0.116.1",
+    "google-auth>=2.40.3",
     "html5lib>=1.1",
     "httpx>=0.28.1",
+    "itsdangerous>=2.2.0",
     "motor>=3.7.1",
     "pymongo>=4.14.0",
     "pytest-playwright>=0.7.0",
     "python-dotenv>=1.1.1",
 ]
+
+[dependency-groups]
+dev = [
+    "poethepoet>=0.37.0",
+    "pytest>=8.4.1",
+]
+
+[tool.poe.tasks]
+dev = "uv run --env-file .env.dev fastapi dev goxave/run.py"
+test = "uv run --env-file .env.dev pytest -s -vvvv"
+queue = "uv run --env-file .env.dev celery -A goxave.tasks.queue worker --loglevel=INFO"
+manual = "uv run --env-file .env.test python manual_run_scraper.py"
