@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => {
       port: Number(env.VITE_PORT),
       proxy: {
         "/api": {
-          target: `http://api:${env.VITE_API_PORT}`, // backend server target
+          target: `http://${env.VITE_API_HOST}:${env.VITE_API_PORT}`, // backend server target
           changeOrigin: true,
         },
       },

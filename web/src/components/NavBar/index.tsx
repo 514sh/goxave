@@ -1,16 +1,17 @@
 import { useState } from "react";
+import { Link } from "react-router";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b-2 border-border font-serif round-md shadow-md bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <nav className="border-border round-md bg-background fixed top-0 right-0 left-0 z-50 border-b-2 font-serif shadow-md">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
           <div className="flex-shrink-0">
-            <a href="#" className="text-xl font-bold">
+            <Link to="/" className="text-xl font-bold">
               GoXave
-            </a>
+            </Link>
           </div>
 
           {/* Hamburger button for small screens */}
@@ -18,7 +19,7 @@ const NavBar = () => {
             <button
               onClick={() => setIsOpen(!isOpen)}
               type="button"
-              className="inline-flex items-center justify-center p-2 rounded-md hover:bg-orange hover:text-white active:bg-orange active:text-white focus:bg-orange focus:text-white"
+              className="hover:bg-orange active:bg-orange focus:bg-orange inline-flex items-center justify-center rounded-md p-2 hover:text-white focus:text-white active:text-white"
               aria-controls="mobile-menu"
               aria-expanded={isOpen}
             >
@@ -51,30 +52,30 @@ const NavBar = () => {
 
           {/* Desktop menu */}
           <div className="hidden sm:flex sm:space-x-8">
-            <a
-              href="#"
-              className="hover:bg-orange hover:text-white  px-3 py-2 rounded-md"
+            <Link
+              to="/"
+              className="hover:bg-orange rounded-md px-3 py-2 hover:text-white"
             >
               Home
-            </a>
-            <a
-              href="#"
-              className="hover:bg-orange hover:text-white  px-3 py-2 rounded-md"
+            </Link>
+            <Link
+              to="/profile"
+              className="hover:bg-orange rounded-md px-3 py-2 hover:text-white"
             >
               Profile
-            </a>
-            <a
-              href="#"
-              className="hover:bg-orange hover:text-white  px-3 py-2 rounded-md"
+            </Link>
+            <Link
+              to="/FAQ"
+              className="hover:bg-orange rounded-md px-3 py-2 hover:text-white"
             >
               FAQ
-            </a>
-            <a
-              href="#"
-              className="hover:bg-orange hover:text-white  px-3 py-2 rounded-md"
+            </Link>
+            <Link
+              to="/logout"
+              className="hover:bg-orange rounded-md px-3 py-2 hover:text-white"
             >
               Logout
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -82,12 +83,12 @@ const NavBar = () => {
       {/* Mobile menu */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-surface bg-opacity-95 z-60 flex flex-col p-4 space-y-4 sm:hidden"
+          className="bg-surface bg-opacity-95 fixed inset-0 z-60 flex flex-col space-y-4 p-4 sm:hidden"
           id="mobile-menu"
         >
           <button
             onClick={() => setIsOpen(false)}
-            className="self-end p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-white hover:bg-orange hover:text-white active:bg-orange active:text-white focus:bg-orange focus:text-white"
+            className="hover:bg-orange active:bg-orange focus:bg-orange self-end rounded-md p-2 hover:text-white focus:text-white focus:ring-2 focus:ring-white focus:outline-none active:text-white"
             aria-label="Close menu"
           >
             <svg
@@ -106,30 +107,30 @@ const NavBar = () => {
               />
             </svg>
           </button>
-          <a
-            href="#"
-            className="block px-3 py-2 rounded-md hover:bg-orange hover:text-white active:bg-orange active:text-white focus:bg-orange focus:text-white"
+          <Link
+            to="/"
+            className="hover:bg-orange active:bg-orange focus:bg-orange block rounded-md px-3 py-2 hover:text-white focus:text-white active:text-white"
           >
             Home
-          </a>
-          <a
-            href="#"
-            className="block px-3 py-2 rounded-md hover:bg-orange hover:text-white active:bg-orange active:text-white focus:bg-orange focus:text-white"
+          </Link>
+          <Link
+            to="/profile"
+            className="hover:bg-orange active:bg-orange focus:bg-orange block rounded-md px-3 py-2 hover:text-white focus:text-white active:text-white"
           >
             Profile
-          </a>
-          <a
-            href="#"
-            className="block px-3 py-2 rounded-md hover:bg-orange hover:text-white active:bg-orange active:text-white focus:bg-orange focus:text-white"
+          </Link>
+          <Link
+            to="/faq"
+            className="hover:bg-orange active:bg-orange focus:bg-orange block rounded-md px-3 py-2 hover:text-white focus:text-white active:text-white"
           >
             FAQ
-          </a>
-          <a
-            href="#"
-            className="block px-3 py-2 rounded-md hover:bg-orange hover:text-white active:bg-orange active:text-white focus:bg-orange focus:text-white"
+          </Link>
+          <Link
+            to="/logout"
+            className="hover:bg-orange active:bg-orange focus:bg-orange block rounded-md px-3 py-2 hover:text-white focus:text-white active:text-white"
           >
             Logout
-          </a>
+          </Link>
         </div>
       )}
     </nav>
