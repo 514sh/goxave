@@ -15,14 +15,23 @@ const newLogin = async (token: string) => {
 const validateLogin = async () => {
   try {
     const response = await axios.get(baseUrl);
-    return response.data.valid_token;
+    return {
+      isValid: Boolean(response.data.valid_token),
+      withDiscord: Boolean(response.data.with_discord),
+    };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.log(error.response);
-      return error.response?.data.valid_token;
+      return {
+        isValid: Boolean(error.response?.data?.valid_token),
+        withDiscord: Boolean(error.response?.data?.with_discord),
+      };
     }
   }
-  return false;
+  return {
+    isValid: false,
+    withDiscord: false,
+  };
 };
 
 const invalidateLogin = async () => {

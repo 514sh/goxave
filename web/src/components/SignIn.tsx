@@ -26,6 +26,7 @@ const SignInScreen = () => {
         const user = authResult.user;
         loginService.newLogin(user.accessToken).then((res) => {
           setLoading(false);
+          console.log(res);
           if (res.valid_token) navigate("/", { replace: true });
         });
         return false;
@@ -38,10 +39,10 @@ const SignInScreen = () => {
   };
 
   useEffect(() => {
-    loginService.validateLogin().then((isValid) => {
-      console.log("validate login", isValid);
+    loginService.validateLogin().then((response) => {
+      console.log("validate login", response);
       setLoading(false);
-      if (isValid) {
+      if (response.isValid) {
         navigate("/", { replace: true });
       }
     });
