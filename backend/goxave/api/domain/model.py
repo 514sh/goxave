@@ -87,7 +87,10 @@ class Product:
         self.__events.append(event)
 
     def add_price_history(
-        self, product_price: str, timestamp: int | None = None
+        self,
+        product_price: str,
+        timestamp: int | None = None,
+        my_trackers: list | None = None,
     ) -> None:
         if not product_price:
             return None
@@ -96,7 +99,9 @@ class Product:
         if timestamp:
             price = Price(price=price_decimal, currency=currency, timestamp=timestamp)
         else:
-            price = Price(price=price_decimal, currency=currency)
+            price = Price(
+                price=price_decimal, currency=currency, timestamp=unix_millis()
+            )
         self.__price_history.append(price)
         if len(self.__price_history) >= 2:
             latest_history = self.__price_history[-1]
@@ -105,7 +110,7 @@ class Product:
                 self.__events.append(
                     events.NotifyUserOnPriceChange(
                         product_url=self.url,
-                        user_ids=self.__user_ids,
+                        my_trackers=my_trackers or [],
                         previous_price=f"{second_latest_history.currency} {second_latest_history.price}",
                         current_price=f"{latest_history.currency} {latest_history.price}",
                     )

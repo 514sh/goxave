@@ -21,13 +21,16 @@ def handle_add_new_item(command: commands.AddNewItem, uow: UnitOfWork) -> User |
     with uow:
         new_product = uow.products.get(command.product)
         current_user = uow.users.get(command.user)
+        print(f"current_user: {current_user}")
+        print(f"command user: {command.user}")
         if not new_product:
             uow.products.add(command.product)
 
         if current_user and command.user.my_products[0] not in current_user.my_products:
             current_user.notify_new_tracked_item_is_added(command.product)
             current_user = uow.users.push(current_user, command.product.url_id)
-            uow.products.push(command.product, command.user.dns_id)
+            print(f"user: {command.user.dns_id}")
+            uow.products.push(product=command.product, new_user_id=command.user.dns_id)
 
         uow.commit()
     return current_user
@@ -81,3 +84,10 @@ def fetch_user_info(command: commands.FetchUserInfo, uow: UnitOfWork) -> User | 
         fetched_user = uow.users.get(command.user)
         uow.commit()
     return fetched_user
+
+
+def update_product_price(command: commands.UpdateProductPrice, uow: UnitOfWork):
+    with uow:
+        uow.products.push(product=command.product)
+        uow.commit()
+    return None

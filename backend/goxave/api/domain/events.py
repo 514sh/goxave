@@ -33,7 +33,7 @@ class NotifyAdminRegardingProduct(Event):
 
 @dataclass
 class NotifyUserOnPriceChange(Event):
-    user_ids: list[str]
+    my_trackers: list
     product_url: str
     previous_price: str
     current_price: str

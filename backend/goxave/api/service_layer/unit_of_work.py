@@ -29,7 +29,6 @@ class UnitOfWork:
 
     def __exit__(self, exc_type, exc_value, traceback):
         try:
-            print(f"exc: {exc_type} committed? {self.__committed}")
             if exc_type is not None or not self.__committed:
                 self.rollback()
         finally:

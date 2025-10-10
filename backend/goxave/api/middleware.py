@@ -7,8 +7,7 @@ from goxave.common import FIREBASE_AUTH_PROJECT_ID, model, uow, verify_token
 
 class ValidateSessionMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        if request.url.path.startswith("/api/login"):
-            print("skipped login middleware")
+        if request.method == "POST" and request.url.path.startswith("/api/login"):
             # Skip session validation for login route
             return await call_next(request)
 
@@ -37,14 +36,16 @@ class ValidateSessionMiddleware(BaseHTTPMiddleware):
         current_user = None
         with uow:
             current_user = uow.users.get(user_model)
-
+            uow.commit()
         if current_user and current_user.email == email:
             headers = dict(request.scope["headers"])
             headers[b"user_id"] = str(current_user.dns_id).encode("utf-8")
             headers[b"user_name"] = str(current_user.name).encode("utf-8")
-            headers[b"discord_webhook"] = str(current_user.discord_webhook).encode(
-                "utf-8"
-            )
+            headers[b"discord_webhook"] = "".encode("utf-8")
+            if current_user.discord_webhook:
+                headers[b"discord_webhook"] = str(current_user.discord_webhook).encode(
+                    "utf-8"
+                )
             request.scope["headers"] = [(k, v) for k, v in headers.items()]
             response = await call_next(request)
             return response

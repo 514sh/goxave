@@ -48,3 +48,8 @@ class UpdateUserInfo(Command):
 @dataclass
 class FetchUserInfo(Command):
     user: User
+
+
+@dataclass
+class UpdateProductPrice(Command):
+    product: Product

@@ -18,6 +18,7 @@ EVENT_HANDLERS = {
     events.NotifyErrorAddingNewItem: [
         event_handlers.notify_discord_on_error_adding_new_item
     ],
+    events.NotifyUserOnPriceChange: [event_handlers.notify_discord_on_price_change],
 }
 
 COMMAND_HANDLERS = {
@@ -28,6 +29,7 @@ COMMAND_HANDLERS = {
     commands.GetOneSavedProduct: command_handlers.get_one_saved_product,
     commands.UpdateUserInfo: command_handlers.update_user_info,
     commands.FetchUserInfo: command_handlers.fetch_user_info,
+    commands.UpdateProductPrice: command_handlers.update_product_price,
 }
 
 
@@ -37,7 +39,6 @@ def handle(message, uow):
     while queue:
         current_message = queue.pop(0)
         if isinstance(current_message, events.Event):
-            print("hanle_events is calleed.")
             handle_events(current_message, uow, queue)
         elif isinstance(current_message, commands.Command):
             results.append(handle_commands(current_message, uow, queue))

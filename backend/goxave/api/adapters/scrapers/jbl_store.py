@@ -57,7 +57,6 @@ class JBLStoreScraper(AbstractScraper):
         self.__product_image = html_parser.get_item_given_index(
             current_product_image, 0
         )
-        print("finished scraping...")
 
     @property
     def url(self) -> str:

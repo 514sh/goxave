@@ -63,7 +63,7 @@ async def login(
 
 
 @router.get("/login")
-def validate_login(
+async def validate_login(
     request: Request,
     redirect: bool = False,
     valid_token: bool = False,
@@ -83,6 +83,7 @@ def validate_login(
             },
         )
     session_id = request.cookies.get("session_id")
+    with_discord = bool(request.headers.get("discord_webhook"))
     if not session_id:
         return JSONResponse(
             status_code=401,
@@ -103,10 +104,13 @@ def validate_login(
         return JSONResponse(
             status_code=401, content={"detail": "Invalid token", "valid_token": False}
         )
-    print(f"token loggedOut {login_result.isLoggedOut}")
 
     return JSONResponse(
-        status_code=200, content={"valid_token": not login_result.isLoggedOut}
+        status_code=200,
+        content={
+            "valid_token": not login_result.isLoggedOut,
+            "with_discord": with_discord,
+        },
     )
 
 

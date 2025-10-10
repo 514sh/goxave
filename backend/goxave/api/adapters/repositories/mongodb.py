@@ -1,6 +1,6 @@
 import abc
 from dataclasses import asdict
-from typing import Literal
+from typing import Iterator, Literal
 
 from pymongo import ReturnDocument
 from pymongo.collection import Collection
@@ -13,6 +13,7 @@ from goxave.api.domain.model import (
     ProductIdentifier,
     ProductImage,
     User,
+    UserIdentifier,
 )
 
 
@@ -53,7 +54,7 @@ class ProductRepository(AbstractRepository):
         filter_query = {"_id": product.url_id}
         to_update = {}
         if product.price_history:
-            to_update["price_history"] = asdict(product.price_history[0])
+            to_update["price_history"] = asdict(product.price_history[-1])
         if new_user_id:
             to_update["my_trackers"] = new_user_id
         update_operation = {"$push": to_update}
@@ -61,6 +62,7 @@ class ProductRepository(AbstractRepository):
             filter_query, update_operation, return_document=ReturnDocument.AFTER
         )
         if updated_document:
+            self.seen.add(product)
             return self.__deserialize(updated_document)
         return None
 
@@ -83,6 +85,13 @@ class ProductRepository(AbstractRepository):
             return None
         return [self.__deserialize(product) for product in my_products]
 
+    def iterator(
+        self,
+    ) -> Iterator[Product]:
+        with self._collection.find({}) as cursor:
+            for product in cursor:
+                yield self.__deserialize(product)
+
     def __serialize(self, product: Product):
         return {
             "_id": product.url_id,
@@ -92,6 +101,7 @@ class ProductRepository(AbstractRepository):
             "price_history": [
                 {
                     "price": hist.price,
+                    "currency": hist.currency,
                     "timestamp": hist.timestamp,
                 }
                 for hist in product.price_history
@@ -100,6 +110,7 @@ class ProductRepository(AbstractRepository):
                 "src": product.product_image.src,
                 "alt": product.product_image.alt,
             },
+            "my_trackers": product.my_trackers,
         }
 
     def __deserialize(self, result: dict) -> Product:
@@ -110,6 +121,7 @@ class ProductRepository(AbstractRepository):
             price_history=[Price(**hist) for hist in result["price_history"]],
             product_image=ProductImage(**result["product_image"]),
             id=result["_id"],
+            user_ids=result["my_trackers"],
         )
 
 
@@ -130,6 +142,11 @@ class UserRepository(AbstractRepository):
         if not found_user:
             return None
         return self.__deserialize(found_user)
+
+    def all(self, user_ids: list[UserIdentifier]) -> Iterator[User]:
+        cursor = self._collection.find({"_id": {"$in": user_ids}})
+        for user in cursor:
+            yield self.__deserialize(user)
 
     def update(self, user: User) -> User | None:
         filter_query = {"_id": user.dns_id}

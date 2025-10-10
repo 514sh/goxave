@@ -9,7 +9,6 @@ def main():
     url = os.environ["URL"]
     store_scraper = handle_scrapers(url=url)
     if not store_scraper:
-        print("Error scraping...")
         return None
 
     store_scraper.start(proxy_server=PROXY_URL)

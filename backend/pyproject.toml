@@ -28,4 +28,5 @@ dev = [
 dev = "uv run --env-file .env.dev fastapi dev goxave/run.py"
 test = "uv run --env-file .env.dev pytest -s -vvvv"
 queue = "uv run --env-file .env.dev celery -A goxave.tasks.queue worker --loglevel=INFO"
+scheduler = "uv run --env-file .env.dev celery -A goxave.tasks.queue beat --loglevel=INFO"
 manual = "uv run --env-file .env.test python manual_run_scraper.py"

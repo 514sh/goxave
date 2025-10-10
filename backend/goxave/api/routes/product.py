@@ -59,7 +59,6 @@ def get_my_products(request: Request):
     my_response = [None]
     if isinstance(is_successful, list) and len(is_successful) > 0:
         my_response = is_successful[0]
-    print(f"my response get products: {is_successful}")
     if my_response is None:
         return JSONResponse(
             status_code=500, content={"message": "Unable to fetch your products."}

@@ -19,7 +19,6 @@ def add_my_discord_webhook(
     my_response = [None]
     if isinstance(is_successful, list) and len(is_successful) > 0:
         my_response = is_successful[0]
-    print(f"my response get products: {is_successful}")
     if my_response is None:
         return JSONResponse(
             status_code=500, content={"message": "Unable to fetch your products."}
@@ -30,7 +29,6 @@ def add_my_discord_webhook(
 @router.get("/users")
 def get_user_info(request: Request):
     user_id = request.headers.get("user_id", "")
-    print(user_id)
     user_model = model.User(id=user_id)
     handle_fetch_user_info = commands.FetchUserInfo(user=user_model)
     is_successful = message_bus.handle(handle_fetch_user_info, uow)
