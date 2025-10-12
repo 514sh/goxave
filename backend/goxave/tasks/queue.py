@@ -1,7 +1,7 @@
 from celery import Celery
-from celery.exceptions import MaxRetriesExceededError  # noqa: F401
+from celery.schedules import crontab
 
-from goxave.config import REDIS_HOST, REDIS_PORT
+from goxave.config import INTERVAL_HOUR, INTERVAL_MIN, REDIS_HOST, REDIS_PORT
 
 queue = Celery(
     "tasks",
@@ -21,7 +21,7 @@ queue.conf.beat_schedule = {
     # },
     "scheduled-scrape": {
         "task": "goxave.tasks.scraper.scheduled_scrape",
-        "schedule": 120.0,
+        "schedule": crontab(minute=INTERVAL_MIN, hour=INTERVAL_HOUR),
         "args": (),
     },
 }
