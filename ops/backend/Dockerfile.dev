@@ -1,5 +1,9 @@
-FROM python:3.12-slim-trixie
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+FROM python:3.12-slim-bookworm
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uvx /usr/local/bin/uvx
+
+RUN apt-get update
 
 WORKDIR /app
 
@@ -7,4 +11,6 @@ COPY pyproject.toml ./
 COPY uv.lock ./
 RUN uv sync
 
+
+RUN uv run playwright install --with-deps
 COPY . .
