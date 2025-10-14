@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Header, Request, Response
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import JSONResponse, RedirectResponse, Response
 
 from goxave.common import (
     FIREBASE_AUTH_PROJECT_ID,
@@ -83,7 +83,7 @@ async def validate_login(
             },
         )
     session_id = request.cookies.get("session_id")
-    with_discord = bool(request.headers.get("discord_webhook"))
+    with_discord = bool(getattr(request.state, "discord_webhook", None))
     if not session_id:
         return JSONResponse(
             status_code=401,
@@ -115,16 +115,16 @@ async def validate_login(
 
 
 @router.delete("/login")
-def invalidate_login(request: Request) -> JSONResponse:
+def invalidate_login(request: Request) -> Response:
     session_id = request.cookies.get("session_id")
     if not session_id:
-        return JSONResponse(status_code=204, content=None)
+        return Response(status_code=204)
 
     with uow:
         login_model = model.Login(session_id=session_id)
         uow.logins.invalidate(login_model)
         uow.commit()
 
-    response = JSONResponse(status_code=204, content=None)
+    response = Response(status_code=204)
     response.set_cookie("session_id", "")
     return response

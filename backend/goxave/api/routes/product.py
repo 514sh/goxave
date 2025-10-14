@@ -35,9 +35,9 @@ async def save_new_item(request: Request, url: Annotated[str, Body(embed=True)])
     product_model = model.Product(url=url)
     scraper.do_scrape_web.delay(  # type: ignore
         url=url,
-        user_id=request.headers.get("user_id", ""),
-        user_name=request.headers.get("user_name", ""),
-        discord_webhook=request.headers.get("discord_webhook", ""),
+        user_id=getattr(request.state, "user_id", ""),
+        user_name=getattr(request.state, "user_name", ""),
+        discord_webhook=getattr(request.state, "discord_webhook", ""),
     )
     return RedirectResponse(
         url=f"/api/products/{product_model.url_id}?redirect=true", status_code=303
@@ -46,7 +46,7 @@ async def save_new_item(request: Request, url: Annotated[str, Body(embed=True)])
 
 @router.get("/products")
 def get_my_products(request: Request):
-    user_id = request.headers.get("user_id", "")
+    user_id = getattr(request.state, "user_id", "")
     if not user_id:
         return JSONResponse(
             status_code=401,
@@ -56,7 +56,7 @@ def get_my_products(request: Request):
 
     handle_get_products = commands.GetMyProducts(user=user_model)
     is_successful = message_bus.handle(handle_get_products, uow)
-    my_response = [None]
+    my_response = None
     if isinstance(is_successful, list) and len(is_successful) > 0:
         my_response = is_successful[0]
     if my_response is None:
@@ -96,7 +96,7 @@ def get_one_product(request: Request, product_id, redirect=False) -> JSONRespons
 
 @router.delete("/products/{product_id}")
 def remove_one_from_my_saved_products(request: Request, product_id):
-    user_id = request.headers.get("user_id", "")
+    user_id = getattr(request.state, "user_id", "")
     if not user_id:
         return JSONResponse(
             status_code=401,

@@ -20,6 +20,7 @@ class ValidateSessionMiddleware(BaseHTTPMiddleware):
         with uow:
             login_model = model.Login(session_id=session_id)
             login_result = uow.logins.get(login_model)
+            uow.commit()
 
         if not login_result:
             raise Exception("Invalid session")
@@ -38,15 +39,11 @@ class ValidateSessionMiddleware(BaseHTTPMiddleware):
             current_user = uow.users.get(user_model)
             uow.commit()
         if current_user and current_user.email == email:
-            headers = dict(request.scope["headers"])
-            headers[b"user_id"] = str(current_user.dns_id).encode("utf-8")
-            headers[b"user_name"] = str(current_user.name).encode("utf-8")
-            headers[b"discord_webhook"] = "".encode("utf-8")
+            request.state.user_id = current_user.dns_id
+            request.state.user_namae = current_user.name
+            request.state.discord_webhook = ""
             if current_user.discord_webhook:
-                headers[b"discord_webhook"] = str(current_user.discord_webhook).encode(
-                    "utf-8"
-                )
-            request.scope["headers"] = [(k, v) for k, v in headers.items()]
+                request.state.discord_webhook = current_user.discord_webhook
             response = await call_next(request)
             return response
 

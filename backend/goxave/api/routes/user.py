@@ -12,7 +12,7 @@ router = APIRouter(prefix="/api")
 def add_my_discord_webhook(
     request: Request, discord_webhook: Annotated[str, Body(embed=True)]
 ):
-    user_id = request.headers.get("user_id", "")
+    user_id = getattr(request.state, "user_id", "")
     user_model = model.User(id=user_id, discord_webhook=discord_webhook)
     handle_update_user_info = commands.UpdateUserInfo(user=user_model)
     is_successful = message_bus.handle(handle_update_user_info, uow)
@@ -28,7 +28,7 @@ def add_my_discord_webhook(
 
 @router.get("/users")
 def get_user_info(request: Request):
-    user_id = request.headers.get("user_id", "")
+    user_id = getattr(request.state, "user_id", "")
     user_model = model.User(id=user_id)
     handle_fetch_user_info = commands.FetchUserInfo(user=user_model)
     is_successful = message_bus.handle(handle_fetch_user_info, uow)
