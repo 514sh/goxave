@@ -46,6 +46,7 @@ def handle_get_users_item(
             return None
         product_ids = current_user.my_products
         my_products = uow.products.all(product_ids)
+        uow.commit()
     return my_products
 
 
