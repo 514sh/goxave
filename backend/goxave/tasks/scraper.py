@@ -88,7 +88,6 @@ def scheduled_scrape(
                 latest_price = scraper_obj.product_price
             if latest_price is None:
                 latest_price = saved_product.product_price
-            latest_price = "₱5,299.00"
             if isinstance(saved_product, model.Product):
                 my_trackers = [
                     tracker for tracker in uow.users.all(saved_product.my_trackers)
@@ -100,4 +99,5 @@ def scheduled_scrape(
                 product=saved_product
             )
             message_bus.handle(handle_update_product_price, uow)
+        uow.commit()
     return "scraped done"
