@@ -11,9 +11,13 @@ class UnitOfWork:
     def __init__(self, client, db_name):
         self._client = client
         self._db_name = db_name
+        self._session: ClientSession | None = None
+        self._in_transaction = False
 
     def __enter__(self):
-        self._session: ClientSession = self._client.start_session()
+        self._session = self._client.start_session()
+        if self._session is None:
+            return self
         self._session.start_transaction()
         self.products = ProductRepository(
             session=self._session, db=self._client[self._db_name]
@@ -24,28 +28,26 @@ class UnitOfWork:
         self.logins = LoginRepository(
             session=self._session, db=self._client[self._db_name]
         )
-        self.__committed = False
+        self._in_transaction = True
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        try:
-            if exc_type is not None or not self.__committed:
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self._session:
+            if self._in_transaction:
                 self.rollback()
-        finally:
-            if not self._session.has_ended:
-                self._session.end_session()
-        return False
-
-    def _commit(self):
-        self._session.commit_transaction()
-
-    def rollback(self):
-        self.__committed = False
-        self._session.abort_transaction()
+            self._session.end_session()
+            self._session = None
+            self._in_transaction = False
 
     def commit(self):
-        self.__committed = True
-        self._commit()
+        if self._session and self._in_transaction:
+            self._session.commit_transaction()
+            self._in_transaction = False
+
+    def rollback(self):
+        if self._session and self._in_transaction:
+            self._session.abort_transaction()
+            self._in_transaction = False
 
     def collect_events(self):
         if not all(
