@@ -5,7 +5,16 @@ import type { ProductResult } from "../types";
 const Profile = () => {
   const [myProducts, setMyProducts] = useState<ProductResult[] | null>(null);
   useEffect(() => {
-    productService.getAll().then((response) => setMyProducts(response));
+    const fetchProducts = async () => {
+      try {
+        const productResponse = await productService.getAll();
+        setMyProducts(productResponse);
+      } catch (err) {
+        console.error("Axios error:", err);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
   if (Array.isArray(myProducts) && myProducts.length === 0) {
