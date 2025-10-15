@@ -45,7 +45,7 @@ async def save_new_item(request: Request, url: Annotated[str, Body(embed=True)])
 
 
 @router.get("/products")
-def get_my_products(request: Request):
+async def get_my_products(request: Request):
     user_id = getattr(request.state, "user_id", "")
     if not user_id:
         return JSONResponse(
@@ -69,7 +69,7 @@ def get_my_products(request: Request):
 
 
 @router.get("/products/{product_id}")
-def get_one_product(request: Request, product_id, redirect=False) -> JSONResponse:
+async def get_one_product(request: Request, product_id, redirect=False) -> JSONResponse:
     product_model = model.Product(id=product_id)
     handle_get_one_saved_product = commands.GetOneSavedProduct(product=product_model)
     is_successful = message_bus.handle(handle_get_one_saved_product, uow)
@@ -95,7 +95,7 @@ def get_one_product(request: Request, product_id, redirect=False) -> JSONRespons
 
 
 @router.delete("/products/{product_id}")
-def remove_one_from_my_saved_products(request: Request, product_id):
+async def remove_one_from_my_saved_products(request: Request, product_id):
     user_id = getattr(request.state, "user_id", "")
     if not user_id:
         return JSONResponse(

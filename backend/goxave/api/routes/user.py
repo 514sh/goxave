@@ -9,7 +9,7 @@ router = APIRouter(prefix="/api")
 
 
 @router.post("/users")
-def add_my_discord_webhook(
+async def add_my_discord_webhook(
     request: Request, discord_webhook: Annotated[str, Body(embed=True)]
 ):
     user_id = getattr(request.state, "user_id", "")
@@ -27,7 +27,7 @@ def add_my_discord_webhook(
 
 
 @router.get("/users")
-def get_user_info(request: Request):
+async def get_user_info(request: Request):
     user_id = getattr(request.state, "user_id", "")
     user_model = model.User(id=user_id)
     handle_fetch_user_info = commands.FetchUserInfo(user=user_model)

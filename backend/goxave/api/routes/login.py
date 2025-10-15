@@ -115,7 +115,7 @@ async def validate_login(
 
 
 @router.delete("/login")
-def invalidate_login(request: Request) -> Response:
+async def invalidate_login(request: Request) -> Response:
     session_id = request.cookies.get("session_id")
     if not session_id:
         return Response(status_code=204)
