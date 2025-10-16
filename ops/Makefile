@@ -2,6 +2,7 @@ COMPOSE_MAIN = docker-compose
 COMPOSE_CERTBOT = certbot-docker-compose
 
 all: enc_main dec_main stop start
+deploy: dec_main sto start
 
 start:
 	docker compose -f ${COMPOSE_MAIN}.dec.yml up -d --build
