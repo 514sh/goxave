@@ -50,7 +50,10 @@ async def get_my_products(request: Request):
     if not user_id:
         return JSONResponse(
             status_code=401,
-            content={"message": "You are not allowed to get this resources."},
+            content={
+                "type": "error",
+                "message": "You are not allowed to get this resources.",
+            },
         )
     user_model = model.User(id=user_id)
 
@@ -61,7 +64,8 @@ async def get_my_products(request: Request):
         my_response = is_successful[0]
     if my_response is None:
         return JSONResponse(
-            status_code=500, content={"message": "Unable to fetch your products."}
+            status_code=500,
+            content={"type": "error", "message": "Unable to fetch your products."},
         )
     return JSONResponse(
         status_code=200, content=[serialize(product) for product in my_response]
@@ -77,18 +81,22 @@ async def get_one_product(request: Request, product_id, redirect=False) -> JSONR
     if isinstance(is_successful, list) and len(is_successful) > 0:
         my_response = is_successful[0]
 
-    if my_response is None and redirect:
+    if redirect:
         return JSONResponse(
             status_code=307,
             content={
                 "redirect": "/",
                 "message": "We receive your request to add this product to your saved items. We will notify you once we finished evaluating your request.",
+                "type": "informational",
             },
         )
     elif my_response is None:
         return JSONResponse(
             status_code=404,
-            content={"message": "This product doesn't exists in our database."},
+            content={
+                "type": "error",
+                "message": "This product doesn't exists in our database.",
+            },
         )
 
     return JSONResponse(status_code=200, content=my_response)
@@ -100,7 +108,10 @@ async def remove_one_from_my_saved_products(request: Request, product_id):
     if not user_id:
         return JSONResponse(
             status_code=401,
-            content={"message": "You are not allowed to get this resources."},
+            content={
+                "message": "You are not allowed to get this resources.",
+                "type": "error",
+            },
         )
     user_model = model.User(id=user_id)
 
@@ -116,6 +127,6 @@ async def remove_one_from_my_saved_products(request: Request, product_id):
     if my_response is None:
         return JSONResponse(
             status_code=404,
-            content={"message": f"{product_id} is already deleted."},
+            content={"message": f"{product_id} is already deleted.", "type": "error"},
         )
     return JSONResponse(status_code=204, content=my_response)

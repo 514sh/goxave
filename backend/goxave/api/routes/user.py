@@ -21,7 +21,8 @@ async def add_my_discord_webhook(
         my_response = is_successful[0]
     if my_response is None:
         return JSONResponse(
-            status_code=500, content={"message": "Unable to fetch your products."}
+            status_code=500,
+            content={"type": "error", "message": "Unable to fetch user info."},
         )
     return RedirectResponse(url="/api/users", status_code=303)
 
@@ -47,5 +48,6 @@ async def get_user_info(request: Request):
             },
         )
     return JSONResponse(
-        status_code=500, content={"message": "Unable to fetch your products."}
+        status_code=500,
+        content={"message": "Unable to fetch user info.", "type": "error"},
     )

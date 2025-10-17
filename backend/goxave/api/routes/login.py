@@ -77,7 +77,8 @@ async def validate_login(
         return JSONResponse(
             status_code=status_code,
             content={
-                "detail": message,
+                "type": "success",
+                "message": message,
                 "valid_token": valid_token,
                 "with_discord": with_discord,
             },
@@ -87,7 +88,11 @@ async def validate_login(
     if not session_id:
         return JSONResponse(
             status_code=401,
-            content={"detail": "No session provided", "valid_token": False},
+            content={
+                "type": "error",
+                "message": "No session provided",
+                "valid_token": False,
+            },
         )
     login_result = None
     with uow:
@@ -97,12 +102,17 @@ async def validate_login(
     if not login_result:
         return JSONResponse(
             status_code=401,
-            content={"detail": "Invalid Session.", "valid_token": False},
+            content={
+                "type": "error",
+                "message": "Invalid Session.",
+                "valid_token": False,
+            },
         )
     token_verified = verify_token(login_result.token, audience=FIREBASE_AUTH_PROJECT_ID)
     if not token_verified:
         return JSONResponse(
-            status_code=401, content={"detail": "Invalid token", "valid_token": False}
+            status_code=401,
+            content={"type": "error", "detail": "Invalid token", "valid_token": False},
         )
 
     return JSONResponse(
