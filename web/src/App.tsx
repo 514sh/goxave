@@ -47,6 +47,7 @@ function App() {
           <div className="pt-24">
             {showModal && (
               <ModalForm
+                modalType={"informational"}
                 isOpen={showModal}
                 onClose={closeModal}
                 onSubmit={handleSubmitModal}

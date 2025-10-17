@@ -1,17 +1,21 @@
 import React, { useState } from "react";
 
 import productService from "../services/products";
+import type { MessageType } from "../types";
 import Modal from "./Modal";
 
 const SaveUrlForm = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
+  const [messageType, setMessageType] = useState<MessageType>("informational");
   const handleSaveUrl = async (event: React.FormEvent) => {
     event.preventDefault();
     console.log("clicked");
     const response = await productService.addNew(url);
+    if (!response) return;
     setIsOpen(true);
     setMessage(response.message);
+    setMessageType(response.type);
     console.log(response);
   };
 
@@ -26,7 +30,12 @@ const SaveUrlForm = () => {
   if (isOpen)
     return (
       <div className="flex-items-center flex justify-center">
-        <Modal isOpen={isOpen} message={message} onClose={onClose} />
+        <Modal
+          modalType={messageType}
+          isOpen={isOpen}
+          message={message}
+          onClose={onClose}
+        />
       </div>
     );
   return (

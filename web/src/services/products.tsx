@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import type { AddNewProductResponse } from "../types";
+
 const baseUrl = "/api/products";
 
 const getAll = async () => {
@@ -14,16 +16,25 @@ const getAll = async () => {
   }
 };
 
-const addNew = async (url: string) => {
+const addNew = async (url: string): Promise<AddNewProductResponse | null> => {
   try {
     const response = await axios.post(baseUrl, {
       url,
       withCredentials: true,
     });
     console.log("add new product", response);
-    return response.data;
+    return {
+      redirect: response.data?.redirect,
+      message: response.data?.message,
+      type: response.data?.type,
+    };
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response) return error.response.data;
+    if (axios.isAxiosError(error) && error.response)
+      return {
+        redirect: error.response.data?.redirect,
+        message: error.response.data?.message,
+        type: error.response.data?.type,
+      };
   }
 
   return null;

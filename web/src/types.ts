@@ -24,3 +24,11 @@ export interface AuthUser {
 export interface AuthUserResult {
   user: AuthUser;
 }
+
+export type MessageType = "informational" | "error" | "success";
+
+export interface AddNewProductResponse {
+  redirect: "/";
+  message: string;
+  type: MessageType;
+}
