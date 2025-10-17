@@ -3,11 +3,12 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 import { firebaseConfig } from "../config";
 import loginService from "../services/logins";
 import type { AuthUserResult } from "../types";
+import Loading from "./Loading";
 import StyledFirebaseAuth from "./StyledFirebaseAuth";
 
 // Configure Firebase.
@@ -15,7 +16,8 @@ initializeApp(firebaseConfig);
 
 const SignInScreen = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState<boolean | null>(null);
+  const location = useLocation();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const uiConfig = {
     // Popup signin flow rather than redirect flow.
@@ -25,9 +27,12 @@ const SignInScreen = () => {
       signInSuccessWithAuthResult: (authResult: AuthUserResult) => {
         const user = authResult.user;
         loginService.newLogin(user.accessToken).then((res) => {
-          setLoading(false);
+          setIsLoading(false);
           console.log(res);
-          if (res.valid_token) navigate("/", { replace: true });
+          if (res.valid_token) {
+            const from = location.state?.from || "/";
+            navigate(from, { replace: true });
+          }
         });
         return false;
       },
@@ -41,14 +46,15 @@ const SignInScreen = () => {
   useEffect(() => {
     loginService.validateLogin().then((response) => {
       console.log("validate login", response);
-      setLoading(false);
+      setIsLoading(false);
       if (response.isValid) {
-        navigate("/", { replace: true });
+        const from = location.state?.from || "/";
+        navigate(from, { replace: true });
       }
     });
-  }, [navigate]);
+  }, [navigate, location.state?.from]);
 
-  if (loading === null) return <>loading...</>;
+  if (isLoading) return <Loading />;
 
   return (
     <div>
