@@ -1,5 +1,3 @@
-// Import FirebaseAuth and firebase.
-// Note: https://github.com/firebase/firebaseui-web-react/pull/173
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { useEffect, useState } from "react";
@@ -11,7 +9,7 @@ import type { AuthUserResult } from "../types";
 import Loading from "./Loading";
 import StyledFirebaseAuth from "./StyledFirebaseAuth";
 
-// Configure Firebase.
+// Initialize Firebase
 initializeApp(firebaseConfig);
 
 const SignInScreen = () => {
@@ -20,32 +18,26 @@ const SignInScreen = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const uiConfig = {
-    // Popup signin flow rather than redirect flow.
-    signInFlow: "popup",
+    signInFlow: "redirect",
     callbacks: {
-      // This function runs after a successful sign-in.
       signInSuccessWithAuthResult: (authResult: AuthUserResult) => {
         const user = authResult.user;
         loginService.newLogin(user.accessToken).then((res) => {
           setIsLoading(false);
-          console.log(res);
           if (res.valid_token) {
             const from = location.state?.from || "/";
             navigate(from, { replace: true });
           }
         });
-        return false;
+        return false; // Prevent automatic redirect by Firebase UI
       },
     },
-    // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-    signInSuccessUrl: "/",
-    // We will display Google and Facebook as auth providers.
+    signInSuccessUrl: "/", // Used with redirect flow
     signInOptions: [GoogleAuthProvider.PROVIDER_ID],
   };
 
   useEffect(() => {
     loginService.validateLogin().then((response) => {
-      console.log("validate login", response);
       setIsLoading(false);
       if (response.isValid) {
         const from = location.state?.from || "/";
@@ -57,8 +49,24 @@ const SignInScreen = () => {
   if (isLoading) return <Loading />;
 
   return (
-    <div>
-      <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={getAuth()} />
+    <div className="bg-background flex min-h-screen flex-col items-center justify-center">
+      <div className="container mx-auto flex max-w-5xl flex-col items-center justify-between px-4 md:flex-row">
+        <div className="mb-8 text-center md:mb-0 md:w-1/2 md:text-left">
+          <h1 className="text-foreground mb-4 font-serif text-4xl font-bold md:text-5xl">
+            goSave
+          </h1>
+          <p className="text-muted max-w-md text-lg md:text-xl">
+            Track prices across your favorite online stores and get instant
+            notifications when prices change. Save smarter with goSave.
+          </p>
+        </div>
+
+        <div className="flex justify-center md:w-1/2 md:justify-end">
+          <div className="bg-surface border-border w-full max-w-sm rounded-lg border p-6 shadow-sm">
+            <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={getAuth()} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
