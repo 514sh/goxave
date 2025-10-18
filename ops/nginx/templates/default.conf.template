@@ -16,6 +16,10 @@ server {
     proxy_pass http://api:$API_PORT;
     proxy_set_header Host $host;
   }
+
+  location /__/auth {
+    proxy_pass https://$PROJECT_ID.firebaseapp.com;
+  }
   
   ### SSL LetsEncrypt
   listen 443 ssl;
