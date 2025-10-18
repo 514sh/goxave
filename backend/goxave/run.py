@@ -1,9 +1,8 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from slowapi.errors import RateLimitExceeded
-
 from goxave.api import middleware
 from goxave.api.routes import hello, login, product, user
+from slowapi.errors import RateLimitExceeded
 
 app = FastAPI()
 # app.add_middleware(SessionMiddleware, secret_key="secret_key")
