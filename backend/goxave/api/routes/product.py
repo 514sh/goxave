@@ -3,7 +3,17 @@ from typing import Annotated
 from fastapi import APIRouter, Body, Request
 from fastapi.responses import JSONResponse, RedirectResponse
 
-from goxave.common import commands, message_bus, model, scraper, uow
+from goxave.common import (
+    LIMIT_PER_HOUR,
+    LIMIT_PER_MIN,
+    LIMIT_PER_SEC,
+    commands,
+    limiter,
+    message_bus,
+    model,
+    scraper,
+    uow,
+)
 
 router = APIRouter(prefix="/api")
 
@@ -31,6 +41,9 @@ def serialize(product: model.Product | None):
 
 
 @router.post("/products")
+@limiter.limit(f"{LIMIT_PER_SEC}/second", per_method=True)
+@limiter.limit(f"{LIMIT_PER_MIN}/minute", per_method=True)
+@limiter.limit(f"{LIMIT_PER_HOUR}/hour", per_method=True)
 async def save_new_item(request: Request, url: Annotated[str, Body(embed=True)]):
     product_model = model.Product(url=url)
     scraper.do_scrape_web.delay(  # type: ignore

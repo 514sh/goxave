@@ -19,7 +19,10 @@ PROXY_URL = os.environ["PROXY_URL"]
 
 INTERVAL_HOUR = os.environ["INTERVAL_HOUR"]
 INTERVAL_MIN = os.environ["INTERVAL_MIN"]
-
+RATE_LIMIT_DISABLED = os.environ["UNLIMITED"]
+LIMIT_PER_SEC = os.environ["LIMIT_PER_SEC"]
+LIMIT_PER_MIN = os.environ["LIMIT_PER_MIN"]
+LIMIT_PER_HOUR = os.environ["LIMIT_PER_HOUR"]
 
 _client = None
 
