@@ -1,4 +1,5 @@
 import "firebaseui/dist/firebaseui.css";
+import "firebase/compat/auth";
 
 import { onAuthStateChanged } from "firebase/auth";
 import * as firebaseui from "firebaseui";

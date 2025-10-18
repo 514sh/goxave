@@ -15,17 +15,19 @@ initializeApp(firebaseConfig);
 const SignInScreen = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const CLIENT_ID = import.meta.env.VITE_FIREBASE_CLIENT_ID;
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const uiConfig = {
-    signInFlow: "redirect",
+    signInFlow: "popup",
     callbacks: {
       signInSuccessWithAuthResult: (authResult: AuthUserResult) => {
         const user = authResult.user;
         loginService.newLogin(user.accessToken).then((res) => {
           setIsLoading(false);
           if (res.valid_token) {
-            const from = location.state?.from || "/";
+            let from = location.state?.from || "/";
+            if (from === "/logout") from = "/";
             navigate(from, { replace: true });
           }
         });
@@ -33,7 +35,16 @@ const SignInScreen = () => {
       },
     },
     signInSuccessUrl: "/", // Used with redirect flow
-    signInOptions: [GoogleAuthProvider.PROVIDER_ID],
+    signInOptions: [
+      { provider: GoogleAuthProvider.PROVIDER_ID, clientId: CLIENT_ID },
+    ],
+    tosUrl: "https://www.google.com",
+    // Privacy policy url.
+    privacyPolicyUrl: "https://www.google.com",
+    // credentialHelper:
+    // CLIENT_ID && CLIENT_ID != "YOUR_OAUTH_CLIENT_ID"
+    // ? firebaseui.auth.CredentialHelper.GOOGLE_YOLO
+    // : firebaseui.auth.CredentialHelper.NONE,
   };
 
   useEffect(() => {

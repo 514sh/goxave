@@ -17,9 +17,12 @@ const router = createBrowserRouter([
       { path: "profile", Component: Profile },
       { path: "ping", Component: Pingpong },
       { path: "faq", Component: FAQ },
-      { path: "login", Component: SignInScreen },
       { path: "logout", Component: SignOut },
     ],
+  },
+  {
+    path: "/login",
+    Component: SignInScreen,
   },
 ]);
 
