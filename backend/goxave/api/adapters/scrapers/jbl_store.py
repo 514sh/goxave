@@ -1,5 +1,4 @@
 from bs4 import Tag
-
 from goxave.api.adapters.scrapers.abc import AbstractScraper
 
 
@@ -9,7 +8,7 @@ class JBLStoreScraper(AbstractScraper):
         self.__product_price: Tag | None = None
         self.__product_name: Tag | None = None
 
-    def start(self, proxy_server: str) -> None:
+    def start(self, proxy_server: str, screenshot: bool = False) -> None:
         html_content = ""
         with self.web_automator() as p:
             if proxy_server:
@@ -19,8 +18,8 @@ class JBLStoreScraper(AbstractScraper):
             page = browser.new_page()
             wait_until = "load"
             page.goto(self.__url, wait_until=wait_until, timeout=600000)
-
-            page.screenshot(path="TEST_DATA/test.png")
+            if screenshot:
+                page.screenshot(path="TEST_DATA/jbl_test.png")
             html_content = page.content()
             browser.close()
 

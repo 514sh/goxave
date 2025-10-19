@@ -12,7 +12,7 @@ class AbstractScraper(abc.ABC):
         return SyncPlaywright()
 
     @abc.abstractmethod
-    def start(self, proxy_server: str):
+    def start(self, proxy_server: str, screenshot: bool = False):
         raise NotImplementedError
 
     @property
