@@ -4,7 +4,9 @@ from datetime import datetime
 from goxave.utilities.currencies import currency_codes, currency_symbols_set
 
 
-def unix_millis(timestamp=datetime.now().timestamp()):
+def unix_millis(timestamp=None) -> int:
+    if timestamp is None:
+        timestamp = datetime.now().timestamp()
     return int(timestamp * 1000)
 
 
