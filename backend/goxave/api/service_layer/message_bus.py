@@ -1,4 +1,4 @@
-from goxave.api.adapters.scrapers import abc, jbl_store
+from goxave.api.adapters.scrapers import abc, amazon, datablitz, jbl_store, lazada
 from goxave.api.domain import commands, events
 from goxave.api.service_layer import command_handlers, event_handlers
 
@@ -8,9 +8,16 @@ def handle_scrapers(
 ) -> abc.AbstractScraper | None:
     if isinstance(url, str):
         url = url.strip()
-
-    if url.startswith("https://jblstore.com.ph/"):
-        return jbl_store.JBLStoreScraper(url=url)
+    stores = {
+        "https://jblstore.com.ph/": jbl_store.JBLStoreScraper,
+        "https://www.amazon.com/": amazon.AmazonStooreScraper,
+        "https://www.lazada.com.ph/": lazada.LazadaScraper,
+        "https://ecommerce.datablitz.com.ph/": datablitz.DatablitzStoreScraper,
+    }
+    for store, scraper in stores.items():
+        if url.startswith(store):
+            return scraper(url)
+    return None
 
 
 EVENT_HANDLERS = {
