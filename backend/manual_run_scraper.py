@@ -11,7 +11,7 @@ def main():
     if not store_scraper:
         return None
 
-    store_scraper.start(proxy_server=PROXY_URL)
+    store_scraper.start(proxy_server=PROXY_URL, screenshot=True)
     for name, value in inspect.getmembers(
         type(store_scraper), lambda v: isinstance(v, property)
     ):
