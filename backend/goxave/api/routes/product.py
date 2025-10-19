@@ -2,7 +2,6 @@ from typing import Annotated
 
 from fastapi import APIRouter, Body, Request
 from fastapi.responses import JSONResponse, RedirectResponse
-
 from goxave.common import (
     LIMIT_PER_HOUR,
     LIMIT_PER_MIN,
@@ -29,6 +28,7 @@ def serialize(product: model.Product | None):
         "price_history": [
             {
                 "price": hist.price,
+                "currency": hist.currency,
                 "timestamp": hist.timestamp,
             }
             for hist in product.price_history
