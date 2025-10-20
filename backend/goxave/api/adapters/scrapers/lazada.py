@@ -27,9 +27,7 @@ class LazadaScraper(AbstractScraper):
             browser.close()
 
         html_parser = self.parser(html_content=html_content)
-        print("done")
         root = html_parser.find_all(id="root")
-        print(root)
         currency = html_parser.nested_find_all(
             root,  # type: ignore
             params=[
@@ -92,13 +90,14 @@ class LazadaScraper(AbstractScraper):
 
     @property
     def product_name(self) -> str | None:
+        product_name = None
         if not self.__product_name:
-            return None
-        if isinstance(self.__product_name, Tag) and isinstance(
-            self.__product_name.string, str
-        ):
-            return self.__product_name.string.strip()
-        return self.__product_name.string
+            return product_name
+        if isinstance(self.__product_name.string, str):
+            product_name = self.__product_name.string.strip()
+        if not product_name:
+            product_name = self.__product_name.get_text(strip=True)
+        return product_name
 
     @property
     def product_image(self):
