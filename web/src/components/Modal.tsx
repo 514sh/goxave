@@ -4,6 +4,8 @@ interface ModalProps {
   message: string;
   modalType: "informational" | "success" | "error";
   isOpen: boolean;
+  ok?: string;
+  onOk: () => void;
   onClose: () => void;
 }
 
@@ -11,6 +13,8 @@ export const Modal: React.FC<ModalProps> = ({
   message,
   modalType,
   isOpen,
+  ok = "Ok",
+  onOk,
   onClose,
 }) => {
   if (!isOpen) return null;
@@ -19,7 +23,7 @@ export const Modal: React.FC<ModalProps> = ({
   const modalStyles = {
     informational: {
       className:
-        "w-11/12 max-w-md rounded-lg border bg-white border-gray-300 shadow-lg sm:w-full p-6",
+        "w-11/12 max-w-md rounded-lg border bg-surface border-gray-300 shadow-lg sm:w-full p-6",
       headerText: "Notice",
     },
     success: {
@@ -58,16 +62,16 @@ export const Modal: React.FC<ModalProps> = ({
         </div>
 
         {/* Message */}
-        <div className="mb-6 text-gray-900">{message}</div>
+        <div className="text-foreground mb-6">{message}</div>
 
         {/* Buttons */}
         <div className="flex justify-end space-x-3">
           <button
-            onClick={onClose}
-            className="bg-primary hover:bg-aqua hover:text-foreground rounded px-4 py-2 font-semibold text-white transition-colors"
+            onClick={onOk}
+            className="bg-primary hover:bg-aqua rounded px-4 py-2 font-semibold text-white transition-colors"
             type="button"
           >
-            OK
+            {ok}
           </button>
         </div>
       </div>

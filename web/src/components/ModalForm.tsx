@@ -21,8 +21,8 @@ export const ModalForm: React.FC<ModalProps> = ({
   const modalStyles = {
     informational: {
       className:
-        "w-11/12 max-w-md rounded-lg border bg-white border-gray-300 shadow-lg sm:w-full p-6",
-      headerText: "Input Form",
+        "w-11/12 max-w-md rounded-lg border bg-surface border-gray-300 shadow-lg sm:w-full p-6",
+      headerText: "Add/Edit your discord webhook",
     },
     success: {
       className:
@@ -61,7 +61,7 @@ export const ModalForm: React.FC<ModalProps> = ({
           <button
             aria-label="Close"
             onClick={onClose}
-            className="text-foreground hover:text-red focus:text-red transition-colors"
+            className="text-foreground hover:text-red focus:text-red rounded-full transition-colors"
             type="button"
           >
             &#x2715;
@@ -77,7 +77,7 @@ export const ModalForm: React.FC<ModalProps> = ({
               onChange={(e) => setInputValue(e.target.value)}
               required
               placeholder="Enter your discord server webhook"
-              className="border-border text-foreground w-full rounded border bg-white p-2 font-sans focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="border-border text-foreground bg-surface focus:ring-aqua w-full rounded border p-2 font-sans focus:ring-2 focus:outline-none"
             />
           </div>
 
@@ -86,13 +86,13 @@ export const ModalForm: React.FC<ModalProps> = ({
             <button
               onClick={onClose}
               type="button"
-              className="bg-secondary hover:bg-red focus:bg-aqua text-foreground rounded px-4 py-2 font-semibold transition-colors"
+              className="bg-secondary hover:bg-aqua focus:bg-aqua text-foreground rounded px-4 py-2 font-semibold transition-colors hover:text-white"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="bg-primary hover:bg-aqua focus:bg-aqua text-foreground rounded px-4 py-2 font-semibold transition-colors"
+              className="bg-primary hover:bg-aqua focus:bg-aqua text-foreground rounded px-4 py-2 font-semibold transition-colors hover:text-white"
             >
               Submit
             </button>

@@ -110,24 +110,28 @@ const NavBar = () => {
           <Link
             to="/"
             className="hover:bg-orange active:bg-orange focus:bg-orange block rounded-md px-3 py-2 hover:text-white focus:text-white active:text-white"
+            onClick={() => setIsOpen(false)}
           >
             Home
           </Link>
           <Link
             to="/profile"
             className="hover:bg-orange active:bg-orange focus:bg-orange block rounded-md px-3 py-2 hover:text-white focus:text-white active:text-white"
+            onClick={() => setIsOpen(false)}
           >
             Profile
           </Link>
           <Link
             to="/faq"
             className="hover:bg-orange active:bg-orange focus:bg-orange block rounded-md px-3 py-2 hover:text-white focus:text-white active:text-white"
+            onClick={() => setIsOpen(false)}
           >
             FAQ
           </Link>
           <Link
             to="/logout"
             className="hover:bg-orange active:bg-orange focus:bg-orange block rounded-md px-3 py-2 hover:text-white focus:text-white active:text-white"
+            onClick={() => setIsOpen(false)}
           >
             Logout
           </Link>
