@@ -106,7 +106,10 @@ class Product:
         if len(self.__price_history) >= 2:
             latest_history = self.__price_history[-1]
             second_latest_history = self.__price_history[-2]
-            if second_latest_history.price != latest_history.price:
+            if (
+                second_latest_history.price != latest_history.price
+                and latest_history.currency == second_latest_history.currency
+            ):
                 self.__events.append(
                     events.NotifyUserOnPriceChange(
                         product_url=self.url,
