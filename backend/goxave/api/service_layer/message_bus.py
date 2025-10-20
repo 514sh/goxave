@@ -10,7 +10,7 @@ def handle_scrapers(
         url = url.strip()
     stores = {
         "jblstore.com.ph/": jbl_store.JBLStoreScraper,
-        "amazon.com/": amazon.AmazonStooreScraper,
+        "amazon.com/": amazon.AmazonStoreScraper,
         "lazada.com.ph/": lazada.LazadaScraper,
         "datablitz.com.ph/": datablitz.DatablitzStoreScraper,
     }
