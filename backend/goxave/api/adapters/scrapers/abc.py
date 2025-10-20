@@ -5,8 +5,12 @@ from goxave.api.adapters.parsers.html.bs4 import HTMLParser
 
 
 class AbstractScraper(abc.ABC):
-    def parser(self, html_content, bypassed: bool = False) -> HTMLParser:
+    def __init__(self, url: str, bypassed: bool = False, timeout: int = 200_000):
+        self._url = url
         self._bypassed = bypassed
+        self._timeout = timeout
+
+    def parser(self, html_content) -> HTMLParser:
         return HTMLParser(html_content)
 
     def web_automator(self) -> SyncPlaywright:
