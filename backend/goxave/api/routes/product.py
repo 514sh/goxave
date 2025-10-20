@@ -111,8 +111,10 @@ async def get_one_product(request: Request, product_id, redirect=False) -> JSONR
                 "message": "This product doesn't exists in our database.",
             },
         )
-
-    return JSONResponse(status_code=200, content=my_response)
+    response = {}
+    if isinstance(my_response, model.Product):
+        response = serialize(my_response)
+    return JSONResponse(status_code=200, content=response)
 
 
 @router.delete("/products/{product_id}")
