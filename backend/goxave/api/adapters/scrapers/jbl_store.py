@@ -1,28 +1,40 @@
-from bs4 import Tag
-
 from goxave.api.adapters.scrapers.abc import AbstractScraper
 
 
 class JBLStoreScraper(AbstractScraper):
     def __init__(self, url: str):
-        self.__url = url
-        self.__product_price: Tag | None = None
-        self.__product_name: Tag | None = None
+        super().__init__(url)
 
     def start(self, proxy_server: str, screenshot: bool = False) -> None:
         html_content = ""
         with self.web_automator() as p:
-            if proxy_server:
+            if proxy_server and not self._bypassed:
                 browser = p.chromium.launch(proxy={"server": proxy_server})
             else:
                 browser = p.chromium.launch()
             page = browser.new_page()
-            wait_until = "load"
-            page.goto(self.__url, wait_until=wait_until, timeout=600000)
-            if screenshot:
-                page.screenshot(path="TEST_DATA/jbl_test.png")
-            html_content = page.content()
-            browser.close()
+            try:
+                print("Attempting navigation with wait_until='networkidle'...")
+                page.goto(self.url, wait_until="networkidle", timeout=self._timeout)
+                final_url = page.url
+                print(f"Success with networkidle. Final URL: {final_url}")
+            except TimeoutError as e:
+                # Fallback to load if networkidle times out
+                print(
+                    f"Networkidle timed out: {str(e)}. Falling back to wait_until='load'..."
+                )
+                page.goto(self.url, wait_until="load", timeout=self._timeout)
+                final_url = page.url
+                print(f"Success with load. Final URL: {final_url}")
+            except Exception as e:
+                # Handle other potential errors
+                print(f"An unexpected error occurred: {str(e)}")
+            finally:
+                # Optionally, interact with the page
+                if screenshot:
+                    page.screenshot(path="TEST_DATA/amazon_test.png")
+                html_content = page.content()
+                browser.close()
 
         html_parser = self.parser(html_content=html_content)
 
@@ -60,9 +72,9 @@ class JBLStoreScraper(AbstractScraper):
 
     @property
     def url(self) -> str:
-        if isinstance(self.__url, str):
-            self.__url = self.__url.strip()
-        return self.__url
+        if isinstance(self._url, str):
+            self._url = self._url.strip()
+        return self._url
 
     @property
     def product_price(self) -> str | None:
