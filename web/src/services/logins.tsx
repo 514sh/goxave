@@ -1,5 +1,6 @@
 import axios from "axios";
 
+import type { LoginCredentials } from "../types";
 const baseUrl = "/api/login";
 
 const newLogin = async (token: string) => {
@@ -12,7 +13,7 @@ const newLogin = async (token: string) => {
   return response.data;
 };
 
-const validateLogin = async () => {
+const validateLogin = async (): Promise<LoginCredentials> => {
   try {
     const response = await axios.get(baseUrl);
     return {
