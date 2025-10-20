@@ -1,16 +1,20 @@
+from bs4 import Tag
+
 from goxave.api.adapters.scrapers.abc import AbstractScraper
 
 
 class LazadaScraper(AbstractScraper):
-    def __init__(self, url: str):
+    def __init__(self, url: str, bypassed=True):
         self.__url = url
-        self.__product_price: str | None = None
-        self.__product_name: str | None = None
+        self.__product_price: Tag | None = None
+        self.__product_name: Tag | None = None
+
+        self._bypassed = bypassed
 
     def start(self, proxy_server: str, screenshot: bool = False) -> None:
         html_content = ""
         with self.web_automator() as p:
-            if proxy_server:
+            if proxy_server and not self._bypassed:
                 browser = p.chromium.launch(proxy={"server": proxy_server})
             else:
                 browser = p.chromium.launch()
@@ -63,7 +67,7 @@ class LazadaScraper(AbstractScraper):
         )
         self.__currency = html_parser.get_item_given_index(currency, 0)
         self.__price = html_parser.get_item_given_index(price, 0)
-        self.__product_name = html_parser.get_item_given_index(current_name, 0)  # type: ignore
+        self.__product_name = html_parser.get_item_given_index(current_name, 0)
         self.__product_image = html_parser.get_item_given_index(
             current_product_image, 0
         )
@@ -90,10 +94,11 @@ class LazadaScraper(AbstractScraper):
     def product_name(self) -> str | None:
         if not self.__product_name:
             return None
-        return ""
-        # if isinstance(self.__product_name.string, str):
-        # return self.__product_name.string.strip()
-        # return self.__product_name.string
+        if isinstance(self.__product_name, Tag) and isinstance(
+            self.__product_name.string, str
+        ):
+            return self.__product_name.string.strip()
+        return self.__product_name.string
 
     @property
     def product_image(self):

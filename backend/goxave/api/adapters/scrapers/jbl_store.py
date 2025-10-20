@@ -1,4 +1,5 @@
 from bs4 import Tag
+
 from goxave.api.adapters.scrapers.abc import AbstractScraper
 
 
