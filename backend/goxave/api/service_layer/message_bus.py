@@ -9,13 +9,13 @@ def handle_scrapers(
     if isinstance(url, str):
         url = url.strip()
     stores = {
-        "https://jblstore.com.ph/": jbl_store.JBLStoreScraper,
-        "https://www.amazon.com/": amazon.AmazonStooreScraper,
-        "https://www.lazada.com.ph/": lazada.LazadaScraper,
-        "https://ecommerce.datablitz.com.ph/": datablitz.DatablitzStoreScraper,
+        "jblstore.com.ph/": jbl_store.JBLStoreScraper,
+        "amazon.com/": amazon.AmazonStooreScraper,
+        "lazada.com.ph/": lazada.LazadaScraper,
+        "datablitz.com.ph/": datablitz.DatablitzStoreScraper,
     }
     for store, scraper in stores.items():
-        if url.startswith(store):
+        if store in url:
             return scraper(url)
     return None
 
