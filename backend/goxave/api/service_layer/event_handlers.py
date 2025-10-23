@@ -53,7 +53,7 @@ def notify_via_email_on_new_item_added(event: NotifyNewItemAdded, uow):
     email = event.user_email
     product_url = event.product_url
     message = f'You have a new saved product ready to be tracked: <a href="{product_url}">{product_url}</a>'
-    subject = "New Item Ready to be Tracked"
+    subject = "goSave - New Item Ready to be Tracked"
     send_email(
         smtp_host=SMTP_HOST,
         smtp_port=SMTP_PORT,
@@ -69,7 +69,7 @@ def notify_via_email_on_error_adding_new_item(event: NotifyErrorAddingNewItem, u
     product_url = event.product_url
     email = event.user_email
     message = f'We are unable to add the following product to your tracked items at this moment. <a href="{product_url}">{product_url}</a>. Please try again!'
-    subject = "Unable to Add Product to your Tracked Items"
+    subject = "goSave - Unable to Add Product to your Tracked Items"
     send_email(
         smtp_host=SMTP_HOST,
         smtp_port=SMTP_PORT,
