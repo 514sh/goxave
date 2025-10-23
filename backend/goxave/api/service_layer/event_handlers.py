@@ -64,10 +64,29 @@ def notify_via_email_on_new_item_added(event: NotifyNewItemAdded, uow):
     )
 
 
+def notify_via_email_on_error_adding_new_item(event: NotifyErrorAddingNewItem, uow):
+    user_name = event.user_name
+    product_url = event.product_url
+    email = event.user_email
+    message = f'We are unable to add the following product to your tracked items at this moment. <a href="{product_url}">{product_url}</a>. Please try again!'
+    subject = "Unable to Add Product to your Tracked Items"
+    send_email(
+        smtp_host=SMTP_HOST,
+        smtp_port=SMTP_PORT,
+        to_email=email,
+        to_name=user_name,
+        message=message,
+        subject=subject,
+    )
+    return None
+
+
 def notify_discord_new_item_added(event: NotifyNewItemAdded, uow):
     discord_webhook = event.discord_webhook
     user_name = event.user_name
     product_url = event.product_url
+    if not discord_webhook:
+        return None
     data = {
         "content": f"Hello {user_name}! You have new saved product ready to be tracked. {product_url}"
     }

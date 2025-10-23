@@ -32,6 +32,7 @@ def do_scrape_web(
             error_notified = events.NotifyErrorAddingNewItem(
                 discord_webhook=discord_webhook,
                 user_name=user_name,
+                user_email=user_email,
                 product_url=url,
             )
             message_bus.handle(error_notified, uow)

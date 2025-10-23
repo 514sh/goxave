@@ -18,6 +18,7 @@ class NotifyNewItemAdded(Event):
 class NotifyErrorAddingNewItem(Event):
     product_url: str
     user_name: str
+    user_email: str
     discord_webhook: str | None = None
 
 
