@@ -1,3 +1,8 @@
+import smtplib
+from datetime import datetime
+from email.message import EmailMessage
+from email.mime.text import MIMEText
+
 import httpx
 
 from goxave.api.domain.events import (
@@ -5,6 +10,58 @@ from goxave.api.domain.events import (
     NotifyNewItemAdded,
     NotifyUserOnPriceChange,
 )
+from goxave.config import EMAIL_ACCOUNT, EMAIL_PASSWORD, SMTP_HOST, SMTP_PORT
+
+
+def send_email(
+    smtp_host: str,
+    smtp_port: int,
+    to_email: str,
+    to_name: str,
+    subject: str,
+    message: str,
+) -> None:
+    html_content = f"""
+        <html>
+            <body>
+                <h4>Hello {to_name}!</h4>
+                <p>{message}</p>
+                <hr style="border: 1px solid #ccc; margin: 20px 0;">
+                <footer style="font-family: Arial, sans-serif; font-size: 12px; color: #555;">
+                    <p><strong>goSave Team</strong></p>
+                    <p>Track prices across your favorite online stores!</p>
+                    <p><a href="https://gosave.grog.com.ph" style="color: #1a73e8; text-decoration: none;">Visit goSave</a>
+                    <p style="color: #888;">&copy; {datetime.now().year} goSave. All rights reserved.</p>
+                </footer>
+            </body>
+        </html>
+        """
+    email_msg = EmailMessage()
+    email_msg["From"] = EMAIL_ACCOUNT
+    email_msg["To"] = to_email
+    email_msg["Subject"] = subject
+    email_msg.set_content(MIMEText(html_content, "html"))
+
+    with smtplib.SMTP_SSL(host=smtp_host, port=smtp_port) as smtp_server:
+        smtp_server.login(EMAIL_ACCOUNT, EMAIL_PASSWORD)
+        smtp_server.send_message(email_msg)
+        print("email sent!")
+
+
+def notify_via_email_on_new_item_added(event: NotifyNewItemAdded, uow):
+    user_name = event.user_name
+    email = event.user_email
+    product_url = event.product_url
+    message = f'You have a new saved product ready to be tracked: <a href="{product_url}">{product_url}</a>'
+    subject = "New Item Ready to be Tracked"
+    send_email(
+        smtp_host=SMTP_HOST,
+        smtp_port=SMTP_PORT,
+        to_email=email,
+        to_name=user_name,
+        message=message,
+        subject=subject,
+    )
 
 
 def notify_discord_new_item_added(event: NotifyNewItemAdded, uow):

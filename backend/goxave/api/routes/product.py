@@ -2,6 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Body, Request
 from fastapi.responses import JSONResponse, RedirectResponse
+
 from goxave.common import (
     LIMIT_PER_HOUR,
     LIMIT_PER_MIN,
@@ -51,6 +52,7 @@ async def save_new_item(request: Request, url: Annotated[str, Body(embed=True)])
         user_id=getattr(request.state, "user_id", ""),
         user_name=getattr(request.state, "user_name", ""),
         discord_webhook=getattr(request.state, "discord_webhook", ""),
+        user_email=getattr(request.state, "user_email", ""),
     )
     return RedirectResponse(
         url=f"/api/products/{product_model.url_id}?redirect=true", status_code=303

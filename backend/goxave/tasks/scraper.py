@@ -14,6 +14,7 @@ def do_scrape_web(
     user_id: str,
     user_name: str,
     discord_webhook: str,
+    user_email: str,
     handle_scrapers: Callable[
         [str], AbstractScraper | None
     ] = message_bus.handle_scrapers,

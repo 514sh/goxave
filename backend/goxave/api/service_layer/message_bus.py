@@ -21,7 +21,10 @@ def handle_scrapers(
 
 
 EVENT_HANDLERS = {
-    events.NotifyNewItemAdded: [event_handlers.notify_discord_new_item_added],
+    events.NotifyNewItemAdded: [
+        event_handlers.notify_discord_new_item_added,
+        event_handlers.notify_via_email_on_new_item_added,
+    ],
     events.NotifyErrorAddingNewItem: [
         event_handlers.notify_discord_on_error_adding_new_item
     ],

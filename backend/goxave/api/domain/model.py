@@ -204,5 +204,6 @@ class User:
                     product_url=product.url,
                     user_name=self.__name,
                     discord_webhook=self.__discord_webhook,
+                    user_email=self.__email,
                 )
             )
