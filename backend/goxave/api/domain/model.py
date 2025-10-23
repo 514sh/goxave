@@ -113,6 +113,7 @@ class Product:
                 self.__events.append(
                     events.NotifyUserOnPriceChange(
                         product_url=self.url,
+                        product_name=self.product_name,
                         my_trackers=my_trackers or [],
                         previous_price=f"{second_latest_history.currency} {second_latest_history.price}",
                         current_price=f"{latest_history.currency} {latest_history.price}",

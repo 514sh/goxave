@@ -38,5 +38,6 @@ class NotifyAdminRegardingProduct(Event):
 class NotifyUserOnPriceChange(Event):
     my_trackers: list
     product_url: str
+    product_name: str
     previous_price: str
     current_price: str
