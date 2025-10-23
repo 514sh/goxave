@@ -57,7 +57,8 @@ def handle_removed_one_saved_product(
         current_user = uow.users.get(command.user)
         if not current_user:
             return None
-        is_removed = uow.users.pull(current_user, command.product_id)
+        is_removed = uow.users.pull(current_user, command.product.url_id)
+        uow.products.pull(command.product, command.user.dns_id)
         uow.commit()
 
     return is_removed

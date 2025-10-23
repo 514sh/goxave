@@ -32,7 +32,7 @@ class GetMyProducts(Command):
 @dataclass
 class RemovedOneSavedProduct(Command):
     user: User
-    product_id: str
+    product: Product
 
 
 @dataclass

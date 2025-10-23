@@ -131,9 +131,9 @@ async def remove_one_from_my_saved_products(request: Request, product_id):
             },
         )
     user_model = model.User(id=user_id)
-
+    product_model = model.Product(id=product_id)
     handle_remove_one_saved_product = commands.RemovedOneSavedProduct(
-        user=user_model, product_id=product_id
+        user=user_model, product=product_model
     )
 
     is_successful = message_bus.handle(handle_remove_one_saved_product, uow)
