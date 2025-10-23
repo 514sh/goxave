@@ -53,11 +53,15 @@ class ProductRepository(AbstractRepository):
             return None
         filter_query = {"_id": product.url_id}
         to_update = {}
+        latest_price = product.price_history[-1]
         if product.price_history:
-            to_update["price_history"] = asdict(product.price_history[-1])
+            to_update["price_history"] = asdict(latest_price)
         if new_user_id:
             to_update["my_trackers"] = new_user_id
-        update_operation = {"$push": to_update}
+        update_operation = {
+            "$push": to_update,
+            "$set": {"product_price": f"{latest_price.currency} {latest_price.price}"},
+        }
         updated_document = self._collection.find_one_and_update(
             filter_query, update_operation, return_document=ReturnDocument.AFTER
         )
