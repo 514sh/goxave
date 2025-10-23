@@ -48,7 +48,7 @@ class UnitOfWork:
         if not all(
             [hasattr(self, "products"), hasattr(self, "users"), hasattr(self, "logins")]
         ):
-            yield None
+            return []
         for repo in [self.users, self.products, self.logins]:
             while repo.seen:
                 aggregate = repo.seen.pop()
