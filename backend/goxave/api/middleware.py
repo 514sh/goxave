@@ -41,6 +41,7 @@ class ValidateSessionMiddleware(BaseHTTPMiddleware):
         if current_user and current_user.email == email:
             request.state.user_id = current_user.dns_id
             request.state.user_namae = current_user.name
+            request.state.user_email = current_user.email
             request.state.discord_webhook = ""
             if current_user.discord_webhook:
                 request.state.discord_webhook = current_user.discord_webhook
