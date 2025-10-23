@@ -3,6 +3,13 @@ from celery.schedules import crontab
 
 from goxave.config import INTERVAL_HOUR, INTERVAL_MIN, REDIS_HOST, REDIS_PORT
 
+
+def get_schedule(minute=INTERVAL_MIN, hour=INTERVAL_HOUR) -> crontab:
+    if hour == "0" or not hour:
+        return crontab(minute=INTERVAL_MIN)
+    return crontab(minute=minute, hour=hour)
+
+
 queue = Celery(
     "tasks",
     broker=f"redis://{REDIS_HOST}:{REDIS_PORT}/0",
@@ -21,7 +28,7 @@ queue.conf.beat_schedule = {
     # },
     "scheduled-scrape": {
         "task": "goxave.tasks.scraper.scheduled_scrape",
-        "schedule": crontab(minute=INTERVAL_MIN, hour=INTERVAL_HOUR),
+        "schedule": get_schedule(),
         "args": (),
     },
 }
