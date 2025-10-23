@@ -23,6 +23,9 @@ function App() {
     });
   };
   useEffect(() => {
+    const showModalDiscordWebhook = localStorage.getItem(
+      "showModalDiscordWebhook"
+    );
     loginService.validateLogin().then((response) => {
       console.log("root", response);
       setIsLoading(false);
@@ -31,7 +34,7 @@ function App() {
           replace: true,
           state: { from: location.pathname },
         });
-      } else if (!response.withDiscord) {
+      } else if (!response.withDiscord && !showModalDiscordWebhook) {
         setShowModal(!response.withDiscord);
       }
     });

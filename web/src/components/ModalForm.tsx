@@ -48,6 +48,13 @@ export const ModalForm: React.FC<ModalProps> = ({
     }
   };
 
+  const handleOnSkip = (event: React.FormEvent) => {
+    event.preventDefault();
+    localStorage.setItem("showModalDiscordWebhook", "SKIPPED");
+    setInputValue("");
+    onClose();
+  };
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
@@ -75,7 +82,6 @@ export const ModalForm: React.FC<ModalProps> = ({
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              required
               placeholder="Enter your discord server webhook"
               className="border-border text-foreground bg-surface focus:ring-aqua w-full rounded border p-2 font-sans focus:ring-2 focus:outline-none"
             />
@@ -84,11 +90,11 @@ export const ModalForm: React.FC<ModalProps> = ({
           {/* Buttons */}
           <div className="flex justify-end space-x-3">
             <button
-              onClick={onClose}
+              onClick={handleOnSkip}
               type="button"
               className="bg-secondary hover:bg-aqua focus:bg-aqua text-foreground rounded px-4 py-2 font-semibold transition-colors hover:text-white"
             >
-              Cancel
+              Skip
             </button>
             <button
               type="submit"
