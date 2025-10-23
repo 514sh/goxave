@@ -24,6 +24,11 @@ LIMIT_PER_SEC = os.environ["LIMIT_PER_SEC"]
 LIMIT_PER_MIN = os.environ["LIMIT_PER_MIN"]
 LIMIT_PER_HOUR = os.environ["LIMIT_PER_HOUR"]
 
+SMTP_HOST = os.environ["SMTP_SERVER_HOST"]
+SMTP_PORT = int(os.environ["SMTP_SERVER_PORT"])
+EMAIL_ACCOUNT = os.environ["EMAIL_ACCOUNT"]
+EMAIL_PASSWORD = os.environ["EMAIL_PASSWORD"].replace("-", " ")
+
 _client = None
 
 
