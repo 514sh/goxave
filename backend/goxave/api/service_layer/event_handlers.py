@@ -81,6 +81,26 @@ def notify_via_email_on_error_adding_new_item(event: NotifyErrorAddingNewItem, u
     return None
 
 
+def notify_via_email_on_price_change(event: NotifyUserOnPriceChange, uow) -> None:
+    for user in event.my_trackers:
+        user_name = user.name
+        email = user.email
+        product_url = event.product_url
+        previous_price = event.previous_price
+        current_price = event.current_price
+        message = f'There is a price change for <a href="{product_url}">{product_url}</a>. From {previous_price} to {current_price}. Check it out now!"'
+        subject = "goSave - Price Change Update"
+        send_email(
+            smtp_host=SMTP_HOST,
+            smtp_port=SMTP_PORT,
+            to_email=email,
+            to_name=user_name,
+            message=message,
+            subject=subject,
+        )
+    return None
+
+
 def notify_discord_new_item_added(event: NotifyNewItemAdded, uow):
     discord_webhook = event.discord_webhook
     user_name = event.user_name

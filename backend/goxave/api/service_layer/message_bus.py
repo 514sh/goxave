@@ -29,7 +29,10 @@ EVENT_HANDLERS = {
         event_handlers.notify_discord_on_error_adding_new_item,
         event_handlers.notify_via_email_on_error_adding_new_item,
     ],
-    events.NotifyUserOnPriceChange: [event_handlers.notify_discord_on_price_change],
+    events.NotifyUserOnPriceChange: [
+        event_handlers.notify_discord_on_price_change,
+        event_handlers.notify_via_email_on_price_change,
+    ],
 }
 
 COMMAND_HANDLERS = {
