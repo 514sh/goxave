@@ -9,6 +9,7 @@ class Event:
 @dataclass
 class NotifyNewItemAdded(Event):
     product_url: str
+    product_name: str
     user_name: str
     user_email: str
     discord_webhook: str | None = None

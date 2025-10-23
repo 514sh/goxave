@@ -52,7 +52,8 @@ def notify_via_email_on_new_item_added(event: NotifyNewItemAdded, uow):
     user_name = event.user_name
     email = event.user_email
     product_url = event.product_url
-    message = f'You have a new saved product ready to be tracked: <a href="{product_url}">{product_url}</a>'
+    product_name = event.product_name
+    message = f'You have a new saved product ready to be tracked: <a href="{product_url}">{product_name}</a>'
     subject = "goSave - New Item Ready to be Tracked"
     send_email(
         smtp_host=SMTP_HOST,

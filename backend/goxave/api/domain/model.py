@@ -202,6 +202,7 @@ class User:
             self.__events.append(
                 events.NotifyNewItemAdded(
                     product_url=product.url,
+                    product_name=product.product_name,
                     user_name=self.__name,
                     discord_webhook=self.__discord_webhook,
                     user_email=self.__email,
