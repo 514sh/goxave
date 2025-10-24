@@ -33,6 +33,9 @@ EVENT_HANDLERS = {
         event_handlers.notify_discord_on_price_change,
         event_handlers.notify_via_email_on_price_change,
     ],
+    events.NotifyAdminRegardingProduct: [
+        event_handlers.notify_admin_regarding_product,
+    ],
 }
 
 COMMAND_HANDLERS = {

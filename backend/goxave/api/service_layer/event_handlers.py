@@ -6,6 +6,7 @@ from email.mime.text import MIMEText
 import httpx
 
 from goxave.api.domain.events import (
+    NotifyAdminRegardingProduct,
     NotifyErrorAddingNewItem,
     NotifyNewItemAdded,
     NotifyUserOnPriceChange,
@@ -149,3 +150,14 @@ def notify_discord_on_price_change(event: NotifyUserOnPriceChange, uow):
             discord_webhook, headers={"Content-Type": "application/json"}, json=data
         )
     return None
+
+
+def notify_admin_regarding_product(event: NotifyAdminRegardingProduct, uow):
+    discord_webhook = event.admin_discord_webhook
+    if not discord_webhook:
+        return None
+    data = {"content": event.message}
+    response = httpx.post(
+        discord_webhook, headers={"Content-Type": "application/json"}, json=data
+    )
+    return response
