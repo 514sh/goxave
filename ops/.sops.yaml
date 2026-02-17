@@ -1,5 +1,6 @@
 creation_rules:
   - age: >-
       age1873xyakw74p6jlcrausq0e9mmh5ch5en2l3nlg6a8d2qtxxmkqdqthddvf,
-      age1helrvdx65wx4e7sauvut57nc288ycth5884mvxag2kmrguvgtfnqayy8uw
+      age1helrvdx65wx4e7sauvut57nc288ycth5884mvxag2kmrguvgtfnqayy8uw,
+      age1dz94a4dhca3x3ad6jwwj63aq55sqe2fpa7d4magr2u2ggd0q4easvtm2m6
     path_regex: \.dec\.yml$
