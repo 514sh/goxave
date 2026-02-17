@@ -1,0 +1,5 @@
+{$SERVER_NAME} {
+    reverse_proxy /api* http://api:{$API_PORT}
+    reverse_proxy /__/auth* https://{$PROJECT_ID}.firebaseapp.com
+    reverse_proxy * http://web:{$WEB_PORT}
+}

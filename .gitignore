@@ -9,3 +9,5 @@ docs/todos
 **vscode**
 **mongo-keyfile**
 ops/data
+ops/caddy/config/*
+ops/caddy/data/*
