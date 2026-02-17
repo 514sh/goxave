@@ -11,14 +11,14 @@ stop:
 cert: dec_certbot
 	docker compose -f ${COMPOSE_CERTBOT}.dec.yml up
 
-enc: enc_main enc_certbot
+enc: enc_main
 
 enc_main:
 	sops -e ${COMPOSE_MAIN}.dec.yml > ${COMPOSE_MAIN}.enc.yml
 enc_certbot:
 	sops -e ${COMPOSE_CERTBOT}.dec.yml > ${COMPOSE_CERTBOT}.enc.yml
 
-dec: dec_main dec_certbot
+dec: dec_main
 
 dec_main:
 	sops -d ${COMPOSE_MAIN}.enc.yml > ${COMPOSE_MAIN}.dec.yml
