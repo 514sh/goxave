@@ -7,3 +7,5 @@ export const firebaseConfig = {
   appId: import.meta.env.APP_ID,
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
+
+export const LOGO_API_PK = import.meta.env.VITE_LOGO_API_PK;
